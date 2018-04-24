@@ -20,6 +20,7 @@ public class Main {
 			if (!error && cA != rB){
 
 				System.out.println("Datos no válidos (no es posible realizar la operación...) \n\n");
+				error = true;
 			}
 		
 		}while(error == true);
@@ -30,21 +31,21 @@ public class Main {
 		 
 		 int ia = 0, ib = 0, colA = 0, colB = 0, i = 1;
 		do{
-			if (!(ia >= cA))
+			if (!(ia >= rA))
 			{
-				new HiloLlenadoArreglo("Hilo" + i, "A", colA).start();// Llena A
+				new HiloLlenadoArreglo("Hilo" + i, "A", ia).start();// Llena A
 				ia++;
 				i++;
 				colA++;
 			}
-			if(!(ib >= cB))
+			if(!(ib >= rB))
 			{
-				new HiloLlenadoArreglo("Hilo" + i, "B", colB).start();// Llena B
+				new HiloLlenadoArreglo("Hilo" + i, "B", ib).start();// Llena B
 				ib++;
 				i++;
 				colB ++;
 			}
-		}while (ia < cA && ib < cB);
+		}while (ia <= rA && ib <= rB);
 	}
 	
 	public static Boolean IngresoDatos(){
