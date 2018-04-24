@@ -45,7 +45,7 @@ public class Main {
 				i++;
 				colB ++;
 			}
-		}while (ia <= rA && ib <= rB);
+		}while (ia < rA | ib < rB);
 	}
 	
 	public static Boolean IngresoDatos(){
