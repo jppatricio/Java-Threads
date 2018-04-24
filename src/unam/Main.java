@@ -2,6 +2,7 @@ package unam;
 
 
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
 
@@ -9,6 +10,9 @@ public class Main {
 	public static Integer rA, rB, cA, cB; // Renglones y columnas de ambas matrices
 	public static int[][] a; // Hacemos los arreglos globales para poder llamarlos desde los hilos
 	public static int[][] b;
+	
+	public static int[][] at;//transpuestas
+	public static int[][] bt;
 
 	public static int[][] c; // el arreglo del resultado final
 
@@ -31,41 +35,87 @@ public class Main {
 		
 		 a = new int [rA][cA];
 		 b = new int [rB][cB];
+
+		 at = new int [cA][rA];
+		 bt = new int [cB][rB];
 		 
-		 int ia = 0, ib = 0, colA = 0, colB = 0, i = 1;
+		 int ia = 0, ib = 0, i = 0;
+		 HiloLlenadoArreglo[] t = new HiloLlenadoArreglo[rA*cB];
 		do{
 			if (!(ia >= rA))
 			{
-				new HiloLlenadoArreglo("Hilo" + i, "A", ia).start();// Llena A
+//				new HiloLlenadoArreglo("Hilo" + i, "A", ia).start();// Llena A
+//				new HiloLlenadoArreglo("Hilo" + i, "A", ia).run();
+				t[i] = new HiloLlenadoArreglo("Hilo" + (i+1), "A", ia);
+				t[i].start();
 				ia++;
 				i++;
-				colA++;
 			}
 			if(!(ib >= rB))
 			{
-				new HiloLlenadoArreglo("Hilo" + i, "B", ib).start();// Llena B
+//				new HiloLlenadoArreglo("Hilo" + i, "B", ib).run();
+//				new HiloLlenadoArreglo("Hilo" + i, "B", ib).start();// Llena B
+				t[i] = new HiloLlenadoArreglo("Hilo" + (i+1), "B", ib);
+				t[i].start();
 				ib++;
 				i++;
-				colB ++;
 			}
 		}while (ia < rA | ib < rB);
+		
+		for(int w = 0; w < i; w++){
+			try {
+				t[w].join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		int s = 0;
+		 HiloTranspuesta[] t2 = new HiloTranspuesta[rA*cB];
 		//AQUI EMPIEZA LA TRANSPOSICION!!!!!!!!!!!!!!!vvvvvvv
-	
+		for(ia = 0; ia < rA; ia++) {
+			
+			t2[ia] = new HiloTranspuesta("Hilo" + i, "A", ia); // Transpone A
+			t2[ia].start();
+//			new HiloTranspuesta("Hilo" + i, "A", ia).run();
+			i++;
+			s++;
+			
+		}
+		for(ib = 0; ib < rB; ib++) {
+			
+//			new HiloTranspuesta("Hilo" + i, "B", ib).start(); // Transpone B
+			t2[ib + rA] = new HiloTranspuesta("Hilo" + i, "B", ib); 
+			t2[ib + rA].start();
+			i++;
+			s++;
+			
+		}
+		for(int w = 0; w < s; w++){
+			try {
+				t2[w].join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		//AQUI EMPIEZA LA MULTIPLICACION (HAY QUE MODIFICAR rA rB cA y cB a los transpuestos)
-		// Y SI PUEDES, HAY QUE HACER QUE NO EMPIEZE LA TRASPOSICION HASTA QUE ACABEN LOS HILOS DE ARRIBA
-		// Y QUE NO EMPIECE LA MULT HASTA QUE ACABE LOS HILOS DE TRANSPOC.
-		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!vvvvvv
-	c = new int[rA][cB];
-	
-	int[] x = new int[cA];// los arreglos a mandar para el producto x= datos de cada fila de A
+		
 
-	for(int i1 = 0; i1< rA; i1++){
-		for(int j= 0; j<cA; j++){ // los datos de la fila x de a
-			x[j] = a[i1][j];
+		c = new int[cA][rB];
+	int[] x = new int[rA];// los arreglos a mandar para el producto x= datos de cada fila de A
+
+	for(int i1 = 0; i1< cA; i1++){
+		for(int j= 0; j<rA; j++){ // los datos de la fila x de a
+			x[j] = at[i1][j];
 		}
-			new HiloProducto("HiloProd " + i1 ,x,b,i1).run();
+			new HiloProducto("HiloProd " + i1 ,x,bt,i1).run();
 		}
+	
+		new HiloImprimir("A: ",at,cA,rA).start();
+		new HiloImprimir("B: ",bt,cB,rB).start();
+		new HiloImprimir("C: ",c,cA, rB).start();
 	}
 	
 	

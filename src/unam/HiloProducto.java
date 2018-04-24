@@ -18,7 +18,7 @@ public class HiloProducto extends Thread{
 	@Override
 	public void run(){
 //		System.out.println("X:" + x.length + " Y: " + y.length); Prueba de que siempre son iguales
-		for(int i = 0; i < Main.cB; i++)
+		for(int i = 0; i < Main.rB; i++)
 		{
 			int resultParcial = 0;
 			
