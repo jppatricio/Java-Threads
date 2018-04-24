@@ -21,14 +21,13 @@ public class HiloLlenadoArreglo extends Thread{
 			
 			for(int i = 0; i < Main.cA; i ++)
 			{
-				System.out.println(Main.a.toString());
 				Main.a[row][i] =  new Random().nextInt(11); //(Va del 0 al 10 excluye al 11)
 				System.out.println(nombre + ": " + "A[" + row + "]" + "[" + i + "] = " + Main.a[row][i]);
 			}
 		}
 		else
 		{
-			for(int i = 0; i < Main.cA; i ++)
+			for(int i = 0; i < Main.cB; i ++)
 			{
 			Main.b[row][i] =  new Random().nextInt(11); //(Va del 0 al 10 excluye al 11)
 

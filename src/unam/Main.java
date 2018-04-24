@@ -25,23 +25,26 @@ public class Main {
 		}while(error == true);
 		System.out.println("A("+ rA + "x" + cA  + ") y B(" + rB + "x" + cB + ")");
 		
-		 int[][] a = new int [rA][cA];
-		 int[][] b = new int [rB][cB];
-		 int i = 1, colA = 0, colB = 0;
+		 a = new int [rA][cA];
+		 b = new int [rB][cB];
+		 
+		 int ia = 0, ib = 0, colA = 0, colB = 0, i = 1;
 		do{
-			if (!(i >= cA))
+			if (!(ia >= cA))
 			{
 				new HiloLlenadoArreglo("Hilo" + i, "A", colA).start();// Llena A
+				ia++;
 				i++;
 				colA++;
 			}
-			if(!(i >= cB))
+			if(!(ib >= cB))
 			{
 				new HiloLlenadoArreglo("Hilo" + i, "B", colB).start();// Llena B
+				ib++;
 				i++;
 				colB ++;
 			}
-		}while (a.length != cA && b.length != cB);
+		}while (ia < cA && ib < cB);
 	}
 	
 	public static Boolean IngresoDatos(){
